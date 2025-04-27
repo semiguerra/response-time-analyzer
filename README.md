@@ -20,20 +20,27 @@ It is built as a Spring Boot web application: simply upload a CSV file with your
 
 ## Installation
 
-Clone the repository:
+You can run the application directly using DockerHub without building it manually.
+
+Pull the prebuilt Docker image:
+
+docker pull semiguerra/response-time-analyzer:latest
+
+Run the container: 
+
+docker run -p 8080:8080 semiguerra/response-time-analyzer
+
+Then open your browser and go to http://localhost:8080
+
+If you prefer to build the application locally:
 
 git clone https://github.com/semiguerra/response-time-analyzer.git
 cd response-time-analyzer
-
-Build and run the application:
-
 ./mvnw spring-boot:run
-
-Then open your browser and go to http://localhost:8080/analyze.
 
 ## How to Use
 
-1. Access the app at http://localhost:8080/analyze.
+1. Access the app at http://localhost:8080
 2. Upload a CSV file containing your task set.
 3. View the scheduling analysis, including:
    - Response times
@@ -59,6 +66,16 @@ TaskB, 10, 10, 1, Resource1:1
 
 Resources field lists the resources used by the task and the time spent on each, separated by ';'.
 Used for analysis with resource sharing protocols (PIP and PCP).
+
+## Future Work
+
+- Add support for task release jitter to model more realistic scheduling behavior.
+
+- Include context switch overhead in the response time analysis for more accurate calculations.
+
+- Improve input form flexibility to allow optional jitter and context switch parameters.
+
+- Provide export options for analysis results (CSV, JSON).
 
 ## Contributions
 
