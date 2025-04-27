@@ -1,2 +1,70 @@
-# response-time-analyzer
-Tool for real-time response time analysis based on RMS, DMS, and resource blocking protocols
+# Response Time Analyzer
+
+Tool for analyzing real-time task response times based on classical scheduling algorithms and resource sharing protocols.
+
+## Description
+
+This application calculates worst-case response times for sets of periodic tasks, supporting multiple modes:
+- MRS (Rate-Monotonic Scheduling): Scheduling based on task periods.
+- DMS (Deadline-Monotonic Scheduling): Scheduling based on task deadlines.
+- Resource Sharing Protocols: Analysis of blocking times under Priority Inheritance Protocol (PIP) and Priority Ceiling Protocol (PCP).
+
+It is built as a Spring Boot web application: simply upload a CSV file with your tasks and instantly get a detailed response-time analysis.
+
+## Technologies Used
+
+- Java 21
+- Spring Boot 3.4.4
+- Maven
+- Git
+
+## Installation
+
+Clone the repository:
+
+git clone https://github.com/semiguerra/response-time-analyzer.git
+cd response-time-analyzer
+
+Build and run the application:
+
+./mvnw spring-boot:run
+
+Then open your browser and go to http://localhost:8080/analyze.
+
+## How to Use
+
+1. Access the app at http://localhost:8080/analyze.
+2. Upload a CSV file containing your task set.
+3. View the scheduling analysis, including:
+   - Response times
+   - Schedulability tests
+   - Blocking times if resource sharing is involved
+
+## CSV Input Format
+
+The application accepts two input formats:
+
+Simple Format (without resources):
+Process, Priority, C (Computation Time), T (Period)
+Task1, 3, 2, 5
+Task2, 2, 1, 10
+
+Priority field is mandatory here.
+Used for MRS or DMS analysis without considering resources.
+
+Extended Format (with resources):
+Task, Period, Deadline, C, Resources
+TaskA, 5, 5, 2, Resource1:1;Resource2:2
+TaskB, 10, 10, 1, Resource1:1
+
+Resources field lists the resources used by the task and the time spent on each, separated by ';'.
+Used for analysis with resource sharing protocols (PIP and PCP).
+
+## Contributions
+
+Contributions, suggestions, and improvements are welcome.
+Feel free to fork this project, open an issue, or create a pull request.
+
+## License
+
+This project is open-source and available under the MIT License.
