@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Resultados del Análisis</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+            padding: 2em;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 0.5em;
+        }
+        .summary {
+            background-color: #f8f9fa;
+            padding: 1em;
+            border-radius: 5px;
+            margin-bottom: 1.5em;
+            border-left: 4px solid #007BFF;
+        }
+        .summary.schedulable {
+            border-left-color: #28a745;
+        }
+        .summary.not-schedulable {
+            border-left-color: #dc3545;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 2em;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 0.75em 1em;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr.schedulable {
+            background-color: rgba(40, 167, 69, 0.1);
+        }
+        tr.not-schedulable {
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+        a {
+            display: inline-block;
+            margin-top: 1em;
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Resultados del Análisis</h1>
+    
+    <div class="summary" th:classappend="${allSchedulable} ? 'schedulable' : 'not-schedulable'">
+        <h3>Resumen del Sistema</h3>
+        <p th:text="${allSchedulable} ? 
+            '✅ Todas las tareas cumplen con sus deadlines' : 
+            '⚠️ Algunas tareas no cumplen con sus deadlines'"></p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Tarea</th>
+                <th>Prioridad</th>
+                <th>Período (T)</th>
+                <th>Deadline (D)</th>
+                <th>Cómputo (C)</th>
+                <th>T. Respuesta</th>
+                <th>¿Cumple?</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="r : ${results}" th:class="${r.schedulable} ? 'schedulable' : 'not-schedulable'">
+                <td th:text="${r.taskName}"></td>
+                <td th:text="${r.priority}"></td>
+                <td th:text="${r.period}"></td>
+                <td th:text="${r.deadline}"></td>
+                <td th:text="${r.computation}"></td>
+                <td th:text="${r.responseTime}"></td>
+                <td th:text="${r.schedulable} ? '✅' : '❌'"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="/">Volver a la página principal</a>
+</body>
+</html>

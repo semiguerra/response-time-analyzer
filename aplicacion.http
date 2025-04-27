@@ -1,0 +1,9 @@
+POST http://localhost:8080/api/analyze
+Content-Type: multipart/form-data; boundary=---011000010111000001101001
+
+-----011000010111000001101001
+Content-Disposition: form-data; name="file"; filename="tarea.csv"
+Content-Type: text/csv
+
+< ./tarea.csv
+-----011000010111000001101001--

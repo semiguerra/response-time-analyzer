@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Análisis de Planificación - Inicio</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+            padding: 2em;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #007BFF;
+            margin-bottom: 1em;
+            text-align: center;
+        }
+        .upload-container {
+            background-color: #fff;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2em;
+        }
+        .form-group {
+            margin-bottom: 1.5em;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5em;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="file"] {
+            width: 100%;
+            padding: 0.75em;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #f8f9fa;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 0.75em 1.5em;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .instructions {
+            background-color: #f8f9fa;
+            padding: 1.5em;
+            border-radius: 8px;
+            margin-top: 2em;
+            border-left: 4px solid #007BFF;
+        }
+        .instructions h2 {
+            color: #007BFF;
+            margin-top: 0;
+        }
+        .instructions ul {
+            padding-left: 1.5em;
+        }
+        .file-format {
+            margin-top: 2em;
+            background-color: #e9f5ff;
+            padding: 1em;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-container">
+        <h1>Análisis de Planificación en Tiempo Real</h1>
+        
+        <form th:action="@{/analyze}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file">Selecciona un archivo CSV con los datos de las tareas:</label>
+                <input type="file" name="file" id="file" accept=".csv" required />
+            </div>
+            <button type="submit">Analizar Planificación</button>
+        </form>
+        
+        <div class="instructions">
+            <h2>Instrucciones</h2>
+            <p>Sube un archivo CSV con el siguiente formato:</p>
+            
+            <div class="file-format">
+Task,Period,Deadline,Computation,Resources
+T1,100,100,20,R1:5;R2:3
+T2,150,150,15,R2:2
+T3,200,200,30
+            </div>
+            
+            <ul>
+                <li><strong>Formato básico:</strong> Task,Period,Deadline,Computation</li>
+                <li><strong>Con recursos:</strong> Añade columna Resources con formato Recurso:Tiempo;Recurso:Tiempo</li>
+                <li>La primera línea debe ser el encabezado</li>
+                <li>Los valores deben estar en unidades de tiempo consistentes</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

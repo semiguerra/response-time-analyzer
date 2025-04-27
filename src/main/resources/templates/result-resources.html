@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Resultados con Recursos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+            padding: 2em;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 0.5em;
+        }
+        .summary {
+            background-color: #f8f9fa;
+            padding: 1em;
+            border-radius: 5px;
+            margin-bottom: 1.5em;
+            border-left: 4px solid #007BFF;
+        }
+        .summary.schedulable {
+            border-left-color: #28a745;
+        }
+        .summary.not-schedulable {
+            border-left-color: #dc3545;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 3em;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 0.75em 1em;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr.schedulable {
+            background-color: rgba(40, 167, 69, 0.1);
+        }
+        tr.not-schedulable {
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+        a {
+            display: inline-block;
+            margin-top: 1em;
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .algorithm-section {
+            margin-bottom: 3em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Resultados con Recursos Compartidos</h1>
+    
+    <div class="summary" th:classappend="${allSchedulable} ? 'schedulable' : 'not-schedulable'">
+        <h3>Resumen del Sistema</h3>
+        <p><strong>Planificabilidad Base:</strong> 
+            <span th:text="${allSchedulable} ? 'Todas las tareas cumplen deadline' : 'Algunas tareas no cumplen deadline'"></span>
+        </p>
+        <p><strong>Planificabilidad con PIP:</strong> 
+            <span th:text="${allInheritedSchedulable} ? 'Todas las tareas cumplen deadline' : 'Algunas tareas no cumplen deadline'"></span>
+        </p>
+        <p><strong>Planificabilidad con PCP:</strong> 
+            <span th:text="${allCeilingSchedulable} ? 'Todas las tareas cumplen deadline' : 'Algunas tareas no cumplen deadline'"></span>
+        </p>
+    </div>
+
+    <div class="algorithm-section">
+        <h2>Protocolo de Herencia de Prioridad (PIP)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tarea</th>
+                    <th>Prioridad</th>
+                    <th>Período (T)</th>
+                    <th>Deadline (D)</th>
+                    <th>Cómputo (C)</th>
+                    <th>Bloqueo (B)</th>
+                    <th>T. Respuesta</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="r : ${results}" th:class="${r.isInheritedSchedulable()} ? 'schedulable' : 'not-schedulable'">
+                    <td th:text="${r.taskName}"></td>
+                    <td th:text="${r.priority}"></td>
+                    <td th:text="${r.period}"></td>
+                    <td th:text="${r.deadline}"></td>
+                    <td th:text="${r.computation}"></td>
+                    <td th:text="${r.blockingTime}"></td>
+                    <td th:text="${r.inheritedResponseTime}"></td>
+                    <td th:text="${r.isInheritedSchedulable()} ? '✅ Cumple' : '❌ No cumple'"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="algorithm-section">
+        <h2>Protocolo de Techo de Prioridad (PCP)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tarea</th>
+                    <th>Prioridad</th>
+                    <th>Período (T)</th>
+                    <th>Deadline (D)</th>
+                    <th>Cómputo (C)</th>
+                    <th>Bloqueo (B)</th>
+                    <th>T. Respuesta</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="r : ${results}" th:class="${r.isCeilingSchedulable()} ? 'schedulable' : 'not-schedulable'">
+                    <td th:text="${r.taskName}"></td>
+                    <td th:text="${r.priority}"></td>
+                    <td th:text="${r.period}"></td>
+                    <td th:text="${r.deadline}"></td>
+                    <td th:text="${r.computation}"></td>
+                    <td th:text="${r.ceilingBlockingTime}"></td>
+                    <td th:text="${r.ceilingResponseTime}"></td>
+                    <td th:text="${r.isCeilingSchedulable()} ? '✅ Cumple' : '❌ No cumple'"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="algorithm-section">
+        <h2>Comparación de Resultados</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tarea</th>
+                    <th>Respuesta Base</th>
+                    <th>Respuesta PIP</th>
+                    <th>Respuesta PCP</th>
+                    <th>Mejor Protocolo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="r : ${results}">
+                    <td th:text="${r.taskName}"></td>
+                    <td>
+                        <span th:text="${r.responseTime}"></span>
+                        <span th:text="${r.isSchedulable()} ? ' (✓)' : ' (✗)'"></span>
+                    </td>
+                    <td>
+                        <span th:text="${r.inheritedResponseTime}"></span>
+                        <span th:text="${r.isInheritedSchedulable()} ? ' (✓)' : ' (✗)'"></span>
+                    </td>
+                    <td>
+                        <span th:text="${r.ceilingResponseTime}"></span>
+                        <span th:text="${r.isCeilingSchedulable()} ? ' (✓)' : ' (✗)'"></span>
+                    </td>
+                    <td th:text="${r.inheritedResponseTime <= r.ceilingResponseTime ? 'PIP' : 'PCP'}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a href="/">Volver a la página principal</a>
+</body>
+</html>
