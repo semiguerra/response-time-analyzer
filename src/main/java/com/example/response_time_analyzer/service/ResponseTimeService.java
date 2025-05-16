@@ -229,9 +229,12 @@ public class ResponseTimeService {
                         resourceBlocking = Math.max(resourceBlocking, usageTime);
                     }
                 }
-
+    
                 if (foundLowerPriorityUser) {
-                    maxBlocking = Math.max(maxBlocking, resourceBlocking);
+                    // Blocking = worst use of ALL resource (not only minors)
+                    Collection<Integer> usos = resource.getUsageTimes().values();
+                    int tMax = usos.isEmpty() ? 0 : Collections.max(usos);
+                    maxBlocking = Math.max(maxBlocking, tMax);
                 }
             }
         }
